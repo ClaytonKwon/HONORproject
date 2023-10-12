@@ -40,7 +40,7 @@ artist_name = "Taylor Swift"
 response = requests.get(f"https://api.spotify.com/v1/search?q={artist_name}&type=artist", headers=headers)
 artist_info = response.json()
 
-# print info abt "The Weeknd"
+# print info abt artist
 try:
     artists = artist_info['artists']['items']
     for artist in artists:
