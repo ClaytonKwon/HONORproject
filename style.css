@@ -1,0 +1,94 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+  }
+  
+  html {
+    font-family: CircularspTitle, CircularSpTitle-Tall, CircularSp-Arab, CircularSp-Hebr, CircularSp-Cyrl, CircularSp-Grek, CircularSp-Deva, sans-serif;
+  }
+  
+  header {
+    background-color: #F3E6BB;
+    padding: 30px 0px 30px 51px;
+  }
+  
+  header .logo img {
+    width: 120px;
+  }
+  
+  section {
+    background: linear-gradient(rgba(11 ,1 ,1 ,0.9) 0%, rgb(0, 0, 0) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+    section div.main {
+    margin: 32px 0;
+    padding: 32px;
+    width: 734px;
+    height: 910px;
+    background: #F3E6BB; 
+    border-radius: 5px
+  }
+    section div.main h1{
+      text-align: center;
+      margin: 48px 0;
+      color: black;
+      font-size: 48px;
+    }
+    
+    section div.main h2{
+      
+      color: white;
+      font-size: 48px;
+    }
+    
+    
+    section div.main .account-connect {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-drection: column;
+    }
+    
+    section div.main .account-connect button{
+      width: 324px;
+      text-align: center;
+      padding: 10px 20px;
+      border: none;
+      outline: none;
+      margin: 5px 0;
+      border-radius: 500px;
+      color: white;
+      background: transparent;
+      border: 1px solid #878787;
+      font-size: 15px;
+      font-weight: bold;
+      }
+      
+    section div.main .account-connect button img {
+      width: 23px;
+      float: left;
+      margin: 0 10px;
+    }
+    
+    section div.main .account-connect button span {
+      position: relative;
+      top: 3px;
+      
+    }
+    
+    section div.main hr{
+      margin: 32px 100px;
+      border-right: none;
+      border-bottom: none;
+      border-left: none;
+      border-image: initial;
+      border-top: 1px solid rgb(41, 41, 41);
+      border-color: black;
+      
+    }
