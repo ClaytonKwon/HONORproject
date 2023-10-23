@@ -34,19 +34,19 @@ try:
 except Exception as e:
     print(f"An error occurred: {str(e)}")
 
-# retrieve artist info
-headers = {"Authorization": f"Bearer {token}"}
-artist_name = "Taylor Swift"
-response = requests.get(f"https://api.spotify.com/v1/search?q={artist_name}&type=artist", headers=headers)
-artist_info = response.json()
+# # retrieve artist info
+# headers = {"Authorization": f"Bearer {token}"}
+# artist_name = "Taylor Swift"
+# response = requests.get(f"https://api.spotify.com/v1/search?q={artist_name}&type=artist", headers=headers)
+# artist_info = response.json()
 
-# print info abt artist
-try:
-    artists = artist_info['artists']['items']
-    for artist in artists:
-        if artist['name'].lower() == artist_name.lower():
-            print(f"Name: {artist['name']}")
-            print(f"Genres: {', '.join(artist['genres'])}")
-            print(f"Spotify URI: {artist['uri']}")
-except KeyError:
-    print("No artist information found.")
+# # print info abt artist
+# try:
+#     artists = artist_info['artists']['items']
+#     for artist in artists:
+#         if artist['name'].lower() == artist_name.lower():
+#             print(f"Name: {artist['name']}")
+#             print(f"Genres: {', '.join(artist['genres'])}")
+#             print(f"Spotify URI: {artist['uri']}")
+# except KeyError:
+#     print("No artist information found.")

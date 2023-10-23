@@ -1,11 +1,16 @@
 <!-- <!DOCTYPE html>
 <html lang="en">
+>>>>>>> a8af7a810ed8ea9f173b24ba335bdaf602ae8b8a
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Spotify Artist</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Not Spotify Log in Page</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+    
+=======
     <h1>Random Spotify Artist</h1>
     <h2>{{ artist.name }}</h2>
     <img src="{{ artist.images[0].url }}" alt="{{ artist.name }}" width="300">
@@ -15,7 +20,7 @@
 </html> -->
 
 <!DOCTYPE html>
-<html lang= "en">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -27,29 +32,53 @@
 <body>
 
     <header>
-        <div class ="logo">
+        <div class="logo">
             <a href="index.html">
                 <img src="https://i.imgur.com/s7H189C.png">
             </a>
-
         </div>
     </header>
-
+    
     <section>
-
+        
         <div class="main">
-            <h1>Log in to Spotify</h1>
-
-        <div class="account-connect">
-            <button class="a-c btn" id="g"><img src="https://i.imgur.com/etmy0pX.png"><span>Continue with Spotify</span></button>
+            <h1>Log in to Bananaify</h1>
+            
+            <div class="account-connect"> 
+                <button class="a-c btn" id="a"><img src="https://i.imgur.com/etmy0pX.png"><span>Continue with Spotify</span></button>
+                <button class="a-c btn" id="b"><img src="img/google.png"><span>Made by Sukjun Hong</span></button>
+                <button class="a-c btn" id="c"><img src="img/apple.png"><span>Made by Clay Kwon</span></button>
+            </div>
+            
+            <hr>
+        
+            <div class="log-in">
+                <form>
+                    <label>Email or username</label>
+                    <input type="text" placeholder="Email or username">
+                    
+                    <label>Password</label>
+                    <input type="text" placeholder="Password">
+                    
+                    <div class="switch">
+                        <input type="checkbox" id="switch" checked>
+                        <label for="switch"></label>
+                        <span>Remember me</span>
+                    </div>
+                    
+                    <button>Log In</button>
+                </form>
+            </div>
+        
         </div>
-
-        <hr>
-
-
-
+        
     </section>
 
-
-
+    <!-- JavaScript to make the button redirect to Spotify's login page -->
+    <script>
+        document.getElementById("a").addEventListener("click", function() {
+            window.location.href = "https://accounts.spotify.com/login";
+        });
+    </script>
 </body>
+</html>
