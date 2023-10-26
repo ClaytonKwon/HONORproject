@@ -1,24 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
->>>>>>> a8af7a810ed8ea9f173b24ba335bdaf602ae8b8a
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Not Spotify Log in Page</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-    
-=======
-    <h1>Random Spotify Artist</h1>
-    <h2>{{ artist.name }}</h2>
-    <img src="{{ artist.images[0].url }}" alt="{{ artist.name }}" width="300">
-    <p>{{ artist.genres|join(', ') }}</p>
-    <a href="{{ artist.external_urls.spotify }}" target="_blank">Listen on Spotify</a>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,70 +13,6 @@
     <header>
         <div class="logo">
             <a href="index.html">
-                <img src="https://i.imgur.com/s7H189C.png">
-            </a>
-        </div>
-    </header>
-    
-    <section>
-        
-        <div class="main">
-            <h1>Log in to Bananaify</h1>
-            
-            <div class="account-connect"> 
-                <button class="a-c btn" id="a"><img src="https://i.imgur.com/etmy0pX.png"><span>Continue with Spotify</span></button>
-                <button class="a-c btn" id="b"><img src="img/google.png"><span>Made by Sukjun Hong</span></button>
-                <button class="a-c btn" id="c"><img src="img/apple.png"><span>Made by Clay Kwon</span></button>
-            </div>
-            
-            <hr>
-        
-            <div class="log-in">
-                <form>
-                    <label>Email or username</label>
-                    <input type="text" placeholder="Email or username">
-                    
-                    <label>Password</label>
-                    <input type="text" placeholder="Password">
-                    
-                    <div class="switch">
-                        <input type="checkbox" id="switch" checked>
-                        <label for="switch"></label>
-                        <span>Remember me</span>
-                    </div>
-                    
-                    <button>Log In</button>
-                </form>
-            </div>
-        
-        </div>
-        
-    </section>
-
-    <script>
-        document.getElementById("a").addEventListener("click", function() {
-            window.location.href = "https://accounts.spotify.com/login";
-        });
-    </script>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Not Spotify Log in Page</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-    <header>
-        <div class="logo">
-            <a href="index.html">
-                <img src="https://i.imgur.com/s7H189C.png">
             </a>
         </div>
     </header>
@@ -107,9 +22,9 @@
             <h1>Log in to Bananaify</h1>
             
             <div class="account-connect"> 
-                <button class="a-c btn" id="a"><img src="https://i.imgur.com/etmy0pX.png"><span>Continue with Spotify</span></button>
-                <button class="a-c btn" id="b"><img src="img/google.png"><span>Made by Sukjun Hong</span></button>
-                <button class="a-c btn" id="c"><img src="img/apple.png"><span>Made by Clay Kwon</span></button>
+                <button class="a-c btn" id="a"><span>Continue with Spotify</span></button>
+                <button class="a-c btn" id="b"><span>Made by Sukjun Hong</span></button>
+                <button class="a-c btn" id="c"><span>Made by Clay Kwon</span></button>
             </div>
             
             <hr>
@@ -140,12 +55,14 @@
 
     <script>
         const CLIENT_ID = '17e466af805745bf8a92dda2b32555c3';
-        const REDIRECT_URI = 'http://127.0.0.1:5000/'; 
+        const REDIRECT_URI = 'http://127.0.0.1:5000/recommendations.html';
 
         document.getElementById('a').addEventListener('click', function() {
             let url = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=user-read-recently-played&response_type=token`;
             window.location.href = url;
         });
+
+        let recentlyPlayedData = [];  // This will store our songs and genres
 
         function getRecentlyPlayed(accessToken) {
             fetch('https://api.spotify.com/v1/me/player/recently-played', {
@@ -157,9 +74,28 @@
             .then(data => {
                 let ul = document.getElementById('recentlyPlayed');
                 data.items.forEach(item => {
-                    let li = document.createElement('li');
-                    li.textContent = item.track.name + ' by ' + item.track.artists[0].name;
-                    ul.appendChild(li);
+                    let trackInfo = {
+                        name: item.track.name,
+                        artist: item.track.artists[0].name,
+                        genre: ""  
+                    };
+                    recentlyPlayedData.push(trackInfo);
+
+                    // get genres for each artist
+                    fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(artistData => {
+                        trackInfo.genre = artistData.genres.join(', ');  // Joining all genres with commas
+
+                        // Print the song, artist, and genre
+                        let li = document.createElement('li');
+                        li.textContent = `${trackInfo.name} by ${trackInfo.artist} - Genres: ${trackInfo.genre}`;
+                        ul.appendChild(li);
+                    });
                 });
             });
         }
@@ -173,4 +109,3 @@
 </body>
 
 </html>
-

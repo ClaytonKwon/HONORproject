@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Recommendations from Bananaify</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <a href="index.html">
+            </a>
+        </div>
+    </header>
+    
+    <section>
+        <div class="main">
+            <h1>Welcome to Bananaify Recommendations</h1>
+            
+            <div id="topPlayedSection">
+                <h2>Your Top Played Songs:</h2>
+                <ul id="topPlayed"></ul>
+            </div>
+
+            <div id="recommendedSection">
+                <h2>Artists & Songs You Might Like:</h2>
+                <ul id="recommendations"></ul>
+            </div>
+            
+        </div>
+        
+    </section>
+
+    <script>
+        const CLIENT_ID = '17e466af805745bf8a92dda2b32555c3';
+        const REDIRECT_URI = 'http://127.0.0.1:5000/';
+        let topPlayedData = [];  // This will store the user's top songs
+
+        function getTopPlayed(accessToken) {
+            fetch('https://api.spotify.com/v1/me/top/tracks', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                let ul = document.getElementById('topPlayed');
+                data.items.forEach(item => {
+                    let trackInfo = {
+                        name: item.name,
+                        artist: item.artists[0].name,
+                        genre: "" 
+                    };
+                    topPlayedData.push(trackInfo);
+
+                    // get genres for each artist
+                    fetch(`https://api.spotify.com/v1/artists/${item.artists[0].id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(artistData => {
+                        trackInfo.genre = artistData.genres[0] || "Unknown"; // Taking the first genre
+
+                        // Print the song and artist
+                        let li = document.createElement('li');
+                        li.textContent = `${trackInfo.name} by ${trackInfo.artist} - Genre: ${trackInfo.genre}`;
+                        ul.appendChild(li);
+                    });
+                });
+            })
+            .then(() => {
+                generateRecommendations(); // After getting songs, generate recommendations
+            });
+        }
+
+        function generateRecommendations() {
+            let ul = document.getElementById('recommendations');
+
+            if (topPlayedData.length > 0) {
+                let li = document.createElement('li');
+                li.textContent = `Since you like ${topPlayedData[0].genre}, you might also enjoy songs from artists like XYZ, ABC, and DEF.`;
+                ul.appendChild(li);
+            }
+        }
+
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        if (params.has('access_token')) {
+            getTopPlayed(params.get('access_token'));
+        }
+    </script>
+</body>
+
+</html>
