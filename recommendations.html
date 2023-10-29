@@ -37,8 +37,9 @@
 
     <script>
         const CLIENT_ID = '17e466af805745bf8a92dda2b32555c3';
-        const REDIRECT_URI = 'http://127.0.0.1:5000/';
+        const REDIRECT_URI = 'http://127.0.0.1:5000/recommendations.html';
         let topPlayedData = [];  // This will store the user's top songs
+        let genresOfTopThreeArtists = [];
 
         function getTopPlayed(accessToken) {
             fetch('https://api.spotify.com/v1/me/top/tracks', {
@@ -49,7 +50,7 @@
             .then(response => response.json())
             .then(data => {
                 let ul = document.getElementById('topPlayed');
-                data.items.forEach(item => {
+                data.items.slice(0, 3).forEach(item => { // Only take top 3 tracks
                     let trackInfo = {
                         name: item.name,
                         artist: item.artists[0].name,
@@ -67,6 +68,9 @@
                     .then(artistData => {
                         trackInfo.genre = artistData.genres[0] || "Unknown"; // Taking the first genre
 
+                        // Add the genre to top three genres list
+                        genresOfTopThreeArtists.push(trackInfo.genre);
+
                         // Print the song and artist
                         let li = document.createElement('li');
                         li.textContent = `${trackInfo.name} by ${trackInfo.artist} - Genre: ${trackInfo.genre}`;
@@ -82,9 +86,9 @@
         function generateRecommendations() {
             let ul = document.getElementById('recommendations');
 
-            if (topPlayedData.length > 0) {
+            if (genresOfTopThreeArtists.length > 0) {
                 let li = document.createElement('li');
-                li.textContent = `Since you like ${topPlayedData[0].genre}, you might also enjoy songs from artists like XYZ, ABC, and DEF.`;
+                li.textContent = `You like the genres: ${genresOfTopThreeArtists.join(', ')}. Based on this, you might also enjoy songs from artists like XYZ, ABC, and DEF.`;
                 ul.appendChild(li);
             }
         }

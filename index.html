@@ -50,7 +50,7 @@
 
     <script>
         const CLIENT_ID = '17e466af805745bf8a92dda2b32555c3';
-        const REDIRECT_URI = 'http://127.0.0.1:5000/recommendations.html';
+        const REDIRECT_URI = 'http://127.0.0.1:5000/recommendations.html#access_token=BQBuIkZ4LpwTst-l-cewaJdBOo0FECmCoGgrDKA_z8OfjM6yjH5Xc_dCu9IAPXc2nfBM6zNKMerEla1ORXbiqNJLcDoPWNV7h8jNQzz3fH40cfaSRciTZFKkKP4h37JDrdFMPC6CbiLDtltqDV5Fap3WIapG4nZbp7OfPh-_2KQOzvzRL4aooTcRHDRFG8_wJXm1fe2H&token_type=Bearer&expires_in=3600';
 
         document.getElementById('a').addEventListener('click', function() {
             let url = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=user-read-recently-played&response_type=token`;
