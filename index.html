@@ -12,8 +12,7 @@
 
     <header>
         <div class="logo">
-            <a href="index.html">
-            </a>
+            <a href="recommendations.html"></a>
         </div>
     </header>
     
@@ -50,56 +49,12 @@
 
     <script>
         const CLIENT_ID = '17e466af805745bf8a92dda2b32555c3';
-        const REDIRECT_URI = 'http://127.0.0.1:5000/recommendations.html#access_token=BQBuIkZ4LpwTst-l-cewaJdBOo0FECmCoGgrDKA_z8OfjM6yjH5Xc_dCu9IAPXc2nfBM6zNKMerEla1ORXbiqNJLcDoPWNV7h8jNQzz3fH40cfaSRciTZFKkKP4h37JDrdFMPC6CbiLDtltqDV5Fap3WIapG4nZbp7OfPh-_2KQOzvzRL4aooTcRHDRFG8_wJXm1fe2H&token_type=Bearer&expires_in=3600';
+        const REDIRECT_URI = 'http://127.0.0.1:5000/recommendations.html';
 
         document.getElementById('a').addEventListener('click', function() {
             let url = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=user-read-recently-played&response_type=token`;
             window.location.href = url;
         });
-
-        let recentlyPlayedData = [];  // This will store our songs and genres
-
-        function getRecentlyPlayed(accessToken) {
-            fetch('https://api.spotify.com/v1/me/player/recently-played', {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                let ul = document.getElementById('recentlyPlayed');
-                data.items.forEach(item => {
-                    let trackInfo = {
-                        name: item.track.name,
-                        artist: item.track.artists[0].name,
-                        genre: ""  
-                    };
-                    recentlyPlayedData.push(trackInfo);
-
-                    // get genres for each artist
-                    fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, {
-                        headers: {
-                            'Authorization': `Bearer ${accessToken}`
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(artistData => {
-                        trackInfo.genre = artistData.genres.join(', ');  // Joining all genres with commas
-
-                        // Print the song, artist, and genre
-                        let li = document.createElement('li');
-                        li.textContent = `${trackInfo.name} by ${trackInfo.artist} - Genres: ${trackInfo.genre}`;
-                        ul.appendChild(li);
-                    });
-                });
-            });
-        }
-
-        const hash = window.location.hash.substring(1);
-        const params = new URLSearchParams(hash);
-        if (params.has('access_token')) {
-            getRecentlyPlayed(params.get('access_token'));
-        }
     </script>
 </body>
 
