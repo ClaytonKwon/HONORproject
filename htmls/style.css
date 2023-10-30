@@ -200,3 +200,8 @@ section div.main .log-in a{
   text-decoration: underline;
 }
 
+#recommendedSection li {
+  font-size: 1em; 
+  margin-bottom: 20px;
+  font-weight: bold;  
+}

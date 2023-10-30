@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Recommendations from Bananaify</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        #recentlyPlayedSection li {
+            font-size: 1em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 
 <body>
@@ -31,66 +38,82 @@
         const CLIENT_ID = '17e466af805745bf8a92dda2b32555c3';
         const REDIRECT_URI = 'http://127.0.0.1:5000/recommendations.html';
         let recentlyPlayedData = [];
+
         function getRecentlyPlayed(accessToken) {
             fetch('https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=10', {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
             })
-                .then(response => response.json())
-                .then(data => {
-                    let ul = document.getElementById('recentlyPlayed');
-                    data.items.forEach(item => {
-                        let trackInfo = {
-                            name: item.name,
-                            artist: item.artists[0].name,
-                            genre: ""
-                        };
-                        recentlyPlayedData.push(trackInfo);
-                        fetch(`https://api.spotify.com/v1/artists/${item.artists[0].id}`, {
-                            headers: {
-                                'Authorization': `Bearer ${accessToken}`
-                            }
-                        })
-                            .then(response => response.json())
-                            .then(artistData => {
-                                trackInfo.genre = artistData.genres.join(', ');
-                                let li = document.createElement('li');
-                                li.textContent = `${trackInfo.name} by ${trackInfo.artist} - Genres: ${trackInfo.genre}`;
-                                ul.appendChild(li);
-                            });
-                    });
-                    const genres = [];
-                    recentlyPlayedData.forEach(track => {
-                        if (track.genre) {
-                            genres.push(...track.genre.split(', '));
-                        }
-                    });
-                    const uniqueGenres = [...new Set(genres)];
-                    getRecommendations(accessToken, uniqueGenres.slice(0, 5));
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch recently played tracks');
+                }
+                return response.json();
+            })
+            .then(data => {
+                let ul = document.getElementById('recentlyPlayed');
+                data.items.forEach(item => {
+                    let trackInfo = {
+                        name: item.name,
+                        artist: item.artists[0].name
+                    };
+                    let li = document.createElement('li');
+                    li.textContent = `${trackInfo.name} by ${trackInfo.artist}`;
+                    ul.appendChild(li);
                 });
+        
+                const hardcodedGenres = ['rock', 'pop'];
+                getRecommendations(accessToken, hardcodedGenres);
+            })
+            .catch(error => {
+                console.error("Error fetching recently played tracks:", error);
+            });
         }
+        
+
         function getRecommendations(accessToken, genres) {
             const genreString = genres.join(',');
-            fetch(`https://api.spotify.com/v1/recommendations?seed_genres=${genreString}`, {
+            console.log("Requesting recommendations for genres:", genreString);
+        
+            const encodedGenreString = encodeURIComponent(genreString);
+            
+            const requestURL = `https://api.spotify.com/v1/recommendations?seed_genres=${encodedGenreString}`;
+            console.log("Recommendations request URL:", requestURL); 
+        
+            fetch(requestURL, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
             })
-                .then(response => response.json())
-                .then(data => {
-                    let ul = document.getElementById('recommendations');
-                    data.tracks.forEach(track => {
-                        let recommendationInfo = {
-                            name: track.name,
-                            artist: track.artists[0].name
-                        };
-                        let li = document.createElement('li');
-                        li.textContent = `${recommendationInfo.name} by ${recommendationInfo.artist}`;
-                        ul.appendChild(li);
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error(`Failed to fetch recommendations. Spotify says: ${JSON.stringify(errorData)}`);
                     });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Recommendation data:", data);
+                let ul = document.getElementById('recommendations');
+                data.tracks.forEach(track => {
+                    let recommendationInfo = {
+                        name: track.name,
+                        artist: track.artists[0].name
+                    };
+                    let li = document.createElement('li');
+                    li.textContent = `${recommendationInfo.name} by ${recommendationInfo.artist}`;
+                    ul.appendChild(li);
                 });
+            })
+            .catch(error => {
+                console.error("Error fetching recommendations:", error);
+            });
         }
+        
+        
+
         const hash = window.location.hash.substring(1);
         const params = new URLSearchParams(hash);
         if (params.has('access_token')) {
@@ -98,5 +121,7 @@
         }
     </script>
 </body>
+
+</html>
 
 </html>
