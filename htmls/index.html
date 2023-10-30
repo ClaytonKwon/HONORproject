@@ -41,7 +41,7 @@
     </section>
     <script>
         const CLIENT_ID = '17e466af805745bf8a92dda2b32555c3';
-        const REDIRECT_URI = 'http://127.0.0.1:5000/recommendations.html';
+        const REDIRECT_URI = 'http://127.0.0.1:5000/index2.html';
         document.getElementById('a').addEventListener('click', function () {
             let url = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=user-top-read%20user-read-recently-played&response_type=token`;
             window.location.href = url;
