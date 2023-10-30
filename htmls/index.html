@@ -9,25 +9,20 @@
 </head>
 
 <body>
-
     <header>
         <div class="logo">
             <a href="recommendations.html"></a>
         </div>
     </header>
-    
     <section>
         <div class="main">
             <h1>Log in to Bananaify</h1>
-            
-            <div class="account-connect"> 
+            <div class="account-connect">
                 <button class="a-c btn" id="a"><span>Continue with Spotify</span></button>
                 <button class="a-c btn" id="b"><span>Made by Sukjun Hong</span></button>
                 <button class="a-c btn" id="c"><span>Made by Clay Kwon</span></button>
             </div>
-            
             <hr>
-        
             <div class="log-in">
                 <form>
                     <label>Email or username</label>
@@ -42,17 +37,13 @@
                     <button>Log In</button>
                 </form>
             </div>
-        
         </div>
-        
     </section>
-
     <script>
         const CLIENT_ID = '17e466af805745bf8a92dda2b32555c3';
         const REDIRECT_URI = 'http://127.0.0.1:5000/recommendations.html';
-
-        document.getElementById('a').addEventListener('click', function() {
-            let url = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=user-read-recently-played&response_type=token`;
+        document.getElementById('a').addEventListener('click', function () {
+            let url = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=user-top-read%20user-read-recently-played&response_type=token`;
             window.location.href = url;
         });
     </script>
