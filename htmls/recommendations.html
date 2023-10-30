@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Recommendations from Bananaify</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <a href="index.html"></a>
+        </div>
+    </header>
+    
+    <section>
+        <div class="main">
+            <h1>Welcome to Bananaify Recommendations</h1>
+
+            <div id="recentlyPlayedSection">
+                <h2>Your Recently Played Songs:</h2>
+                <ul id="recentlyPlayed"></ul>
+            </div>
+
+            <div id="recommendedSection">
+                <h2>Recommended Songs & Artists:</h2>
+                <ul id="recommendations"></ul>
+            </div>
+                    
+        </div>
+    </section>
+
+    <script>
+        const CLIENT_ID = '17e466af805745bf8a92dda2b32555c3';
+        const REDIRECT_URI = 'http://127.0.0.1:5000/recommendations.html';
+
+        let recentlyPlayedData = [];  // This will store our songs and genres
+
+        function getRecentlyPlayed(accessToken) {
+            fetch('https://api.spotify.com/v1/me/player/recently-played', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                let ul = document.getElementById('recentlyPlayed');
+                data.items.forEach(item => {
+                    let trackInfo = {
+                        name: item.track.name,
+                        artist: item.track.artists[0].name,
+                        genre: ""  
+                    };
+                    recentlyPlayedData.push(trackInfo);
+
+                    // get genres for each artist
+                    fetch(`https://api.spotify.com/v1/artists/${item.track.artists[0].id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(artistData => {
+                        trackInfo.genre = artistData.genres.join(', ');  // Joining all genres with commas
+
+                        // Print the song, artist, and genre
+                        let li = document.createElement('li');
+                        li.textContent = `${trackInfo.name} by ${trackInfo.artist} - Genres: ${trackInfo.genre}`;
+                        ul.appendChild(li);
+                    });
+                });
+
+                const genres = [];
+                recentlyPlayedData.forEach(track => {
+                    if (track.genre) {
+                        genres.push(...track.genre.split(', '));
+                    }
+                });
+
+                // Get unique genres
+                const uniqueGenres = [...new Set(genres)];
+
+                // Fetch recommendations based on the top genres
+                getRecommendations(accessToken, uniqueGenres.slice(0, 5));  // using top 5 genres for recommendations
+            });
+        }
+
+        function getRecommendations(accessToken, genres) {
+            const genreString = genres.join(',');
+            fetch(`https://api.spotify.com/v1/recommendations?seed_genres=${genreString}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                let ul = document.getElementById('recommendations');
+                data.tracks.forEach(track => {
+                    let recommendationInfo = {
+                        name: track.name,
+                        artist: track.artists[0].name
+                    };
+                    let li = document.createElement('li');
+                    li.textContent = `${recommendationInfo.name} by ${recommendationInfo.artist}`;
+                    ul.appendChild(li);
+                });
+            });
+        }
+
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        if (params.has('access_token')) {
+            getRecentlyPlayed(params.get('access_token'));
+        }
+    </script>
+</body>
+
+</html>
